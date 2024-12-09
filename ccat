@@ -1,0 +1,36 @@
+#!/bin/bash
+
+# Description: Customiszed cat to open only part of the file
+# Usage: ccat filename [part]
+# Example: ccat myfile.txt 1/3
+
+file="$1"
+part="$2"
+
+# Check if file exists
+if [[ ! -f "$file" ]]; then
+  echo "File not found!"
+  exit 1
+fi
+
+# Default to 1/3 if part not specified
+if [[ -z "$part" ]]; then
+  part="1/3"
+fi
+
+# Parse part argument
+IFS='/' read -r chunk total <<< "$part"
+
+# Count total lines
+lines=$(wc -l < "$file")
+chunk_lines=$((lines / total))
+start=$(( (chunk - 1) * chunk_lines + 1 ))
+
+# If last chunk, read to end of file
+if [[ "$chunk" -eq "$total" ]]; then
+  tail -n +"$start" "$file"
+else
+  end=$((chunk * chunk_lines))
+  sed -n "${start},${end}p" "$file"
+fi
+

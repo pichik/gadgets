@@ -1,0 +1,26 @@
+#!/bin/bash
+
+# Usage: ccatloop <num_parts> <filename>
+num_parts=$1
+filename=$2
+
+if [[ -z "$num_parts" || -z "$filename" ]]; then
+    echo "Usage: ccatloop <num_parts> <filename>"
+    exit 1
+fi
+
+# Loop through each part from 1 to num_parts
+for (( part=1; part<=num_parts; part++ )); do
+    # Capture the output of customcat into a variable
+    output=$(ccat "$filename" "$part/$num_parts")
+    
+    # Print the output to the terminal
+    echo "$output"
+    
+    # Copy the output to the clipboard
+    echo "$output" | clip.exe
+    
+    # Wait for user to press Enter before moving to the next part
+    read -p "Press Enter to continue to part $((part + 1))/$num_parts"
+done
+

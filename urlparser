@@ -1,0 +1,25 @@
+#!/bin/bash
+
+# Check if a filename is provided for naming
+if [[ -z "$1" ]]; then
+    echo "Usage: <command> | $0 <name-for-directory>"
+    exit 1
+fi
+
+# Use the argument to name the directory
+input_filename=$(basename "$1")
+parsed_dir="${input_filename%.*}-parsed"
+
+# Read input from stdin
+input="$(</dev/stdin)"
+
+# Create necessary directories based on the provided name
+mkdir -p "$parsed_dir"
+mkdir -p "$parsed_dir/new"
+
+# Process input and store results in respective files under the parsed directory
+printf '%s\n' "$input" | ag -v "\.(jpg|jpeg|png|css|gif|svg|woff|woff2|ttf|eot|ico)($|\?)" | unfurl -u format %d%p | anew "$parsed_dir/endpoints" > "$parsed_dir/new/endpoints"
+printf '%s\n' "$input" | unfurl -u domains | anew "$parsed_dir/domains"
+printf '%s\n' "$input" | unfurl -u keys | anew "$parsed_dir/params" > "$parsed_dir/new/params"
+printf '%s\n' "$input" | unfurl -u values | anew "$parsed_dir/values"
+printf '%s\n' "$input" | unfurl -u keypairs | anew "$parsed_dir/pvs"
