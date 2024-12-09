@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# Requires tomnomnom unfurl https://github.com/tomnomnom/unfurl
+# and anew https://github.com/tomnomnom/anew
+
 # Check if a filename is provided for naming
 if [[ -z "$1" ]]; then
     echo "Usage: <command> | $0 <name-for-directory>"
