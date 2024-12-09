@@ -1,5 +1,7 @@
 #!/bin/bash
 
+# Split file into parts, press enter to move to next one
+
 # Usage: ccatloop <num_parts> <filename>
 num_parts=$1
 filename=$2
